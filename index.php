@@ -8,12 +8,55 @@ require 'config.php';
 
 $app = new \Slim\App;
 
+/**
+ * @param mixed $data
+ */
 function log_data($data){
 	if (is_array($data) || is_array($data)){
 		$data = json_encode($data, JSON_PRETTY_PRINT);
 	}
 	$date = date('c');
 	file_put_contents(__DIR__.'/log', "[$date] $data\n", FILE_APPEND);
+}
+
+/**
+ * @param string $text
+ * @return string
+ */
+function messageFromText($text){
+	list($activity, $names) = explode(':', $text);
+
+	if (empty($activity) || empty($names)){
+		return 'Sorry, we couldn\'t find a valid question & names in your message';
+	}
+
+	$activity = str_replace(['Who', 'who'], '', $activity);
+	$activity = trim($activity);
+
+	if (empty($activity)){
+		return 'Sorry we couldn\'t work out your activity - send messages like "who should xxx: name, name2, name3';
+	}
+
+	$names = trim($names);
+	$names = str_replace(',', '', $names);
+	$names = explode(' ', $names);
+
+	if (empty($names)){
+		return 'Sorry we couldn\'t read names in your message - put a colon before the list and separate them with spaces';
+	}
+
+	if (function_exists('random_int')){
+		$rand = random_int(0, count($names)-1);
+	}
+	else {
+		$rand = rand(0, count($names)-1);
+	}
+	$chosen = $names[$rand];
+	$chosen = trim($chosen);
+
+	$message = "$chosen $activity";
+
+	return $message;
 }
 
 $handler = function (Request $request, Response $response){
@@ -46,25 +89,7 @@ $handler = function (Request $request, Response $response){
 
 	$text = $params['text'];
 
-	list($activity, $names) = explode(':', $text);
-
-	$activity = str_replace(['Who', 'who'], '', $activity);
-	$activity = trim($activity);
-
-	$names = trim($names);
-	$names = str_replace(',', '', $names);
-	$names = explode(' ', $names);
-
-	if (function_exists('random_int')){
-		$rand = random_int(0, count($names)-1);
-	}
-	else {
-		$rand = rand(0, count($names)-1);
-	}
-	$chosen = $names[$rand];
-	$chosen = trim($chosen);
-
-	$message = "$chosen $activity";
+	$message = messageFromText($text);
 
 	$basic = new \Nexmo\Client\Credentials\Basic(NEXMO_API, NEXMO_SECRET);
 	$client = new \Nexmo\Client($basic);
