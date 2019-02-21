@@ -26,3 +26,7 @@ Text your registered number with a message e.g.
 You should receive a return text e.g.
 
 > john should buy beer
+
+## Example
+
+Send a text in the above format to +447520632463 
