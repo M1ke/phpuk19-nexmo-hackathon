@@ -2,3 +2,4 @@ vendor/
 .idea/
 deploy
 get-log
+config.php

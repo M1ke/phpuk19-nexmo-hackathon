@@ -3,6 +3,9 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 require 'vendor/autoload.php';
+
+require 'config.php';
+
 $app = new \Slim\App;
 
 function log_data($data){
@@ -63,7 +66,7 @@ $handler = function (Request $request, Response $response){
 
 	$message = "$chosen $activity";
 
-	$basic = new \Nexmo\Client\Credentials\Basic('824978dc', 'aMu7UjSXpuQywdWj');
+	$basic = new \Nexmo\Client\Credentials\Basic(NEXMO_API, NEXMO_SECRET);
 	$client = new \Nexmo\Client($basic);
 
 	log_data("Sending message '$message'");
