@@ -1,0 +1,13 @@
+{
+    "name": "m1ke/phpuk-nexmo",
+    "type": "project",
+    "authors": [
+        {
+            "name": "m1ke",
+            "email": "mike@m1ke.me"
+        }
+    ],
+    "require": {
+        "slim/slim": "^3.8"
+    }
+}
