@@ -52,12 +52,18 @@ $handler = function (Request $request, Response $response){
 	$names = str_replace(',', '', $names);
 	$names = explode(' ', $names);
 
-	$chosen = $names[rand(0, count($names) - 1)];
+	if (function_exists('random_int')){
+		$rand = random_int(0, count($names)-1);
+	}
+	else {
+		$rand = rand(0, count($names)-1);
+	}
+	$chosen = $names[$rand];
 	$chosen = trim($chosen);
 
 	$message = "$chosen $activity";
 
-	$basic  = new \Nexmo\Client\Credentials\Basic('824978dc', 'aMu7UjSXpuQywdWj');
+	$basic = new \Nexmo\Client\Credentials\Basic('824978dc', 'aMu7UjSXpuQywdWj');
 	$client = new \Nexmo\Client($basic);
 
 	log_data("Sending message '$message'");
